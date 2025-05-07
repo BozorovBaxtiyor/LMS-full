@@ -104,4 +104,4 @@ Salt_rounds = 5
 
 ##  Contributor
 
-- [@Piyush Agrawal](https://github.com/piyush-agrawal6)
+- [@Baxtiyor Bozorov](https://github.com/BaxtiyorBozorov)
