@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getDashboardData } from "../../Redux/dashboard/action";
@@ -81,6 +81,25 @@ const Home = () => {
     },
   ];
 
+  // Training center information
+  const trainingCenterInfo = {
+    name: "LMS Training Center",
+    description: "Welcome to LMS Training Center. We offer a variety of courses to help you achieve your learning goals.",
+  };
+
+  // Courses information
+  const courses = [
+    { id: 1, name: "Course 1", description: "Description of Course 1" },
+    { id: 2, name: "Course 2", description: "Description of Course 2" },
+    { id: 3, name: "Course 3", description: "Description of Course 3" },
+  ];
+
+  const [selectedCourse, setSelectedCourse] = useState(null);
+
+  const handleCourseClick = (course) => {
+    setSelectedCourse(course);
+  };
+
   useEffect(() => {
     dispatch(getDashboardData());
   }, []);
@@ -118,6 +137,32 @@ const Home = () => {
               })}
             </div>
           </div>
+
+          {/* Training center information */}
+          <div className="training-center-info">
+            <h2>{trainingCenterInfo.name}</h2>
+            <p>{trainingCenterInfo.description}</p>
+          </div>
+
+          {/* Courses section */}
+          <div className="courses-section">
+            <h2>Courses</h2>
+            <ul>
+              {courses.map((course) => (
+                <li key={course.id} onClick={() => handleCourseClick(course)}>
+                  {course.name}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Course details */}
+          {selectedCourse && (
+            <div className="course-details">
+              <h3>{selectedCourse.name}</h3>
+              <p>{selectedCourse.description}</p>
+            </div>
+          )}
 
           {/* Bar nd Pie Chart */}
           <div className="charts">

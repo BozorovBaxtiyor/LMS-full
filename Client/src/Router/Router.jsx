@@ -11,6 +11,7 @@ import SingleContent from "../Pages/SingleContent/SingleContent";
 import Doubts from "../Pages/Doubts/Doubts";
 import SingleDoubt from "../Pages/SingleDoubt/SingleDoubt";
 import LeaderBoard from "../Pages/LeaderBoard/LeaderBoard";
+import SignUp from "../Pages/SignUp/SignUp";
 
 const Router = () => {
   return (
@@ -27,6 +28,7 @@ const Router = () => {
         <Route path="/contents" element={<Content />} />
         <Route path="/doubts" element={<Doubts />} />
         <Route path="/doubt/:id" element={<SingleDoubt />} />
+        <Route path="/signup" element={<SignUp />} />
         <Route path="*" element={<Home />} />
       </Routes>
     </div>
