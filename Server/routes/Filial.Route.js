@@ -23,18 +23,19 @@ router.get("/all", async (req, res) => {
 // Create new filial (only admin/superadmin)
 router.post("/create", isAdminAuthenticated,  upload.single('photo'), async (req, res) => {
     try {
-        console.log(req.body , "req.body");
-        console.log(req.file , "req.file");
-
-        console.log(req.file);
+  
         
-        
+      let uploadedFileName = null;
       const filialData = req.body;
       
       // Rasm yuklangan bo'lsa, uning URL ini qo'shish
       if (req.file) {
         filialData.photoUrl = req.file.filename;
+        uploadedFileName = req.file.filename;
       }
+
+      // console.log(req.file);
+      
   
       const filial = new FilialModel(filialData);
       await filial.save();
@@ -44,6 +45,11 @@ router.post("/create", isAdminAuthenticated,  upload.single('photo'), async (req
         filial 
       });
     } catch (error) {
+      if (uploadedFileName) {
+        fs.unlink(`./uploads/images/${uploadedFileName}`, (err) => {
+          if (err) console.error("Error deleting image:", err);
+        });
+      }
       res.status(400).send({ 
         message: "Error creating filial", 
         error: error.message 

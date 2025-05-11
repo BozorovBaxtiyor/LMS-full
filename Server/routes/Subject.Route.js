@@ -1,8 +1,10 @@
 const express = require("express");
+const fs = require("fs");
 const router = express.Router();
 const { SubjectModel } = require("../models/subject.model");
 const { isAdminAuthenticated } = require("../middlewares/authenticate");
 const upload = require("../middlewares/upload");
+const { TutorModel } = require("../models/Tutor.model");
 
 // Get all subjects - Public route
 router.get("/all", async (req, res) => {
@@ -30,12 +32,16 @@ router.get("/:subjectId", async (req, res) => {
 
 // Create new subject - Admin only
 router.post("/create", isAdminAuthenticated, upload.single('photo'), async (req, res) => {
+  // O'chirilishi kerak bo'lgan rasm nomini saqlash uchun
+  let uploadedFileName = null;
+
   try {
     const subjectData = req.body;
     
     // Add photo URL if image was uploaded
     if (req.file) {
-      subjectData.photoUrl = req.file.filename;
+      uploadedFileName = req.file.filename;
+      subjectData.photoUrl = uploadedFileName;
     }
 
     // Convert string dates to Date objects
@@ -44,6 +50,17 @@ router.post("/create", isAdminAuthenticated, upload.single('photo'), async (req,
     }
     if (subjectData.endDate) {
       subjectData.endDate = new Date(subjectData.endDate);
+    }
+
+    const tutur = await TutorModel.findById(subjectData.tutorId);
+    if (!tutur) {
+      // Agar tutor topilmasa va rasm yuklangan bo'lsa, rasmni o'chiramiz
+      if (uploadedFileName) {
+        fs.unlink(`./uploads/images/${uploadedFileName}`, (err) => {
+          if (err) console.error("Error deleting image:", err);
+        });
+      }
+      return res.status(404).send({ message: "Tutor not found" });
     }
 
     // Create and save new subject
@@ -55,6 +72,13 @@ router.post("/create", isAdminAuthenticated, upload.single('photo'), async (req,
       subject 
     });
   } catch (error) {
+    // Xatolik yuz berganda, agar rasm yuklangan bo'lsa uni o'chiramiz
+    if (uploadedFileName) {
+      fs.unlink(`./uploads/images/${uploadedFileName}`, (err) => {
+        if (err) console.error("Error deleting image:", err);
+      });
+    }
+    
     res.status(400).send({ 
       message: "Error creating subject", 
       error: error.message 
@@ -112,6 +136,15 @@ router.delete("/:subjectId", isAdminAuthenticated, async (req, res) => {
     if (!subject) {
       return res.status(404).send({ message: "Subject not found" });
     }
+
+    fs.unlink(`./uploads/images/${subject.photoUrl}`, (err) => {
+      if (err) {
+        console.error("Error deleting image:", err);
+      } else {
+        console.log("Image deleted successfully");
+      }
+    });
+    
 
     res.send({ message: "Subject deleted successfully" });
   } catch (error) {
