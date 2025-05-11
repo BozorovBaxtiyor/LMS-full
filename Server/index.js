@@ -18,12 +18,16 @@ const quizRouter = require("./routes/Quiz.Route");
 const contentRouter = require("./routes/Content.Route");
 const DoubtRouter = require("./routes/Doubt.Route");
 const DashboardRouter = require("./routes/Dashboard.Route");
+const FilialRouter = require("./routes/Filial.Route");
+const SubjectRouter = require("./routes/Subject.Route");
 
 app.use(express.text());
 app.use(express.json());
 app.use(cors());
 
 //routes
+app.use("/images" , express.static(__dirname+"/uploads/images"));
+
 app.get("/", (req, res) => {
   res.send("Home Route");
 });
@@ -34,6 +38,8 @@ app.use("/quiz", quizRouter);
 app.use("/content", contentRouter);
 app.use("/doubt", DoubtRouter);
 app.use("/dashboard", DashboardRouter);
+app.use("/filial", FilialRouter);
+app.use("/subject", SubjectRouter);
 
 
 //app listening

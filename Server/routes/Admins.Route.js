@@ -9,7 +9,7 @@ const { AdminModel } = require("../models/admin.model");
 
 //middleware import
 const {
-  isAdminAuthenticated,
+  isSuperAdminAuthenticated
 } = require("../middlewares/authenticate");
 const { envFile } = require("../configs/env.config");
 
@@ -24,7 +24,7 @@ router.get("/all", async (req, res) => {
 });
 
 //admin registration route
-router.post("/register", isAdminAuthenticated, async (req, res) => {
+router.post("/register", isSuperAdminAuthenticated, async (req, res) => {
   const { name, email, password } = req.body.data;
   try {
     let user = await AdminModel.find({ email });
@@ -114,7 +114,7 @@ router.post("/login", async (req, res) => {
 });
 
 //edit admin route
-router.patch("/:adminId", isAdminAuthenticated, async (req, res) => {
+router.patch("/:adminId", isSuperAdminAuthenticated, async (req, res) => {
   const { adminId } = req.params;
   const payload = req.body.data;
   try {
@@ -127,7 +127,7 @@ router.patch("/:adminId", isAdminAuthenticated, async (req, res) => {
 });
 
 //delete admin route
-router.delete("/:adminId", async (req, res) => {
+router.delete("/:adminId", isSuperAdminAuthenticated, async (req, res) => {
   const { adminId } = req.params;
   try {
     const admin = await AdminModel.findByIdAndDelete({ _id: adminId });
