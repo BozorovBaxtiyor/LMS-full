@@ -181,6 +181,9 @@ const Login = () => {
               <button type="submit">CONTINUE</button>
             </form>
           </div>
+          <div>
+            <button onClick={() => navigate("/signup")}>Sign Up</button>
+          </div>
         </div>
       </div>
 
