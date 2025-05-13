@@ -1,4 +1,3 @@
-import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "../Pages/Home/Home";
 import Login from "../Pages/Login/Login";
@@ -11,12 +10,14 @@ import SingleContent from "../Pages/SingleContent/SingleContent";
 import Doubts from "../Pages/Doubts/Doubts";
 import SingleDoubt from "../Pages/SingleDoubt/SingleDoubt";
 import LeaderBoard from "../Pages/LeaderBoard/LeaderBoard";
+import HomePage from "../Pages/HomePage";
 
 const Router = () => {
   return (
     <div>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/home" element={<Home />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/tutor" element={<Tutor />} />
