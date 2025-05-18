@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { FiMenu, FiX, FiUser, FiBook, FiChevronDown, FiSearch } from "react-icons/fi";
-import "./Css/header.css"; // We'll create this CSS file
+import "./Css/header.css";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -107,10 +108,10 @@ const Header = () => {
               )}
             </div>
 
-            <button className="signin-button">
+            <Link to="/login" className="signin-button">
               <FiUser className="signin-icon" />
               Sign In
-            </button>
+            </Link>
           </div>
 
           {/* Mobile menu button */}
