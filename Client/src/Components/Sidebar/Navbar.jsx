@@ -18,6 +18,7 @@ import { HiOutlineHome } from "react-icons/hi";
 import { GoChevronDown } from "react-icons/go";
 import { RiAdminLine } from "react-icons/ri";
 import { AiOutlineQuestion } from "react-icons/ai";
+import { BsJournalPlus } from "react-icons/bs";
 
 // CSS imports
 import "./Navbar.css";
@@ -48,6 +49,7 @@ const Navbar = ({ children }) => {
     { icon: <TbBrandSpeedtest />, title: "Quizzes", address: "/quizzes" },
     { icon: <TbLayoutGridAdd />, title: "Contents", address: "/contents" },
     { icon: <TbUsers />, title: "Leader Board", address: "/leaderboard" },
+    { icon: <BsJournalPlus />, title: "Add Courses", address: "/add/courses" },
   ];
   const studentData = [
     { icon: <HiOutlineHome />, title: "Dashboard", address: "/home" },
