@@ -11,6 +11,7 @@ import Doubts from "../Pages/Doubts/Doubts";
 import SingleDoubt from "../Pages/SingleDoubt/SingleDoubt";
 import LeaderBoard from "../Pages/LeaderBoard/LeaderBoard";
 import HomePage from "../Pages/HomePage";
+import AddCourses from "../Pages/AddCourses/AddCourses";
 
 const Router = () => {
   return (
@@ -28,6 +29,7 @@ const Router = () => {
         <Route path="/contents" element={<Content />} />
         <Route path="/doubts" element={<Doubts />} />
         <Route path="/doubt/:id" element={<SingleDoubt />} />
+        <Route path="/add/courses" element={<AddCourses />} />
         <Route path="*" element={<Home />} />
       </Routes>
     </div>

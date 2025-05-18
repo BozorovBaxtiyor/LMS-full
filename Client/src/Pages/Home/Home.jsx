@@ -46,6 +46,7 @@ const Home = () => {
   } = useSelector((store) => store.auth);
 
   const { dashboard } = useSelector((store) => store.dashboard);
+  console.log(dashboard)
 
   //overview data
   const overviewData = [

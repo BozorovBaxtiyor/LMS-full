@@ -1,35 +1,28 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { adminLogin, studentLogin, tutorLogin } from "../../Redux/auth/action";
-
-//css imports
-import { message, Space, Spin } from "antd";
+import { message, Spin } from "antd";
+import { FiUser, FiLock, FiChevronDown } from "react-icons/fi";
 import "./Login.css";
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const auth = useSelector((store) => store.auth);
-
-  //alert api
   const [messageApi, contextHolder] = message.useMessage();
-
-  //loading state
   const [loading, setLoading] = useState(false);
-
-  //form state
   const [formData, setFormData] = useState({
     type: "",
     email: "",
     password: "",
   });
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const handleFormChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // login function
   const handleFormSubmit = (e) => {
     e.preventDefault();
     if (formData.type === "") {
@@ -40,93 +33,37 @@ const Login = () => {
       });
     }
     setLoading(true);
-    if (formData.type === "admin") {
-      dispatch(adminLogin(formData)).then((res) => {
-        if (res.message === "Wrong credentials") {
-          setLoading(false);
-          messageApi.open({
-            type: "info",
-            content: "Wrong credentials !",
-            duration: 3,
-          });
-        } else if (res.message === "Access Denied") {
-          setLoading(false);
-          messageApi.open({
-            type: "info",
-            content: "Your access has been revoked by the admin !",
-            duration: 3,
-          });
-        } else if (res.message === "Error") {
-          setLoading(false);
-          messageApi.open({
-            type: "info",
-            content: "Something went wrong, please try again",
-            duration: 3,
-          });
-        } else {
-          setLoading(false);
-          return navigate("/home");
-        }
-      });
-    }
-    if (formData.type === "tutor") {
-      dispatch(tutorLogin(formData)).then((res) => {
-        if (res.message === "Wrong credentials") {
-          setLoading(false);
-          messageApi.open({
-            type: "info",
-            content: "Wrong credentials !",
-            duration: 3,
-          });
-        } else if (res.message === "Access Denied") {
-          setLoading(false);
-          messageApi.open({
-            type: "info",
-            content: "Your access has been revoked by the admin !",
-            duration: 3,
-          });
-        } else if (res.message === "error") {
-          setLoading(false);
-          messageApi.open({
-            type: "info",
-            content: "Something went wrong, please try again",
-            duration: 3,
-          });
-        } else {
-          setLoading(false);
-          return navigate("/home");
-        }
-      });
-    }
-    if (formData.type === "student") {
-      dispatch(studentLogin(formData)).then((res) => {
-        if (res.message === "Wrong credentials") {
-          setLoading(false);
-          messageApi.open({
-            type: "info",
-            content: "Wrong credentials !",
-            duration: 3,
-          });
-        } else if (res.message === "Access Denied") {
-          setLoading(false);
-          messageApi.open({
-            type: "info",
-            content: "Your access has been revoked by the admin !",
-            duration: 3,
-          });
-        } else if (res.message === "error") {
-          setLoading(false);
-          messageApi.open({
-            type: "info",
-            content: "Something went wrong, please try again",
-            duration: 3,
-          });
-        } else {
-          setLoading(false);
-          return navigate("/home");
-        }
-      });
-    }
+    
+    const loginActions = {
+      admin: adminLogin,
+      tutor: tutorLogin,
+      student: studentLogin
+    };
+    
+    dispatch(loginActions[formData.type](formData)).then((res) => {
+      setLoading(false);
+      if (res.message === "Wrong credentials") {
+        messageApi.open({
+          type: "error",
+          content: "Wrong credentials!",
+          duration: 3,
+        });
+      } else if (res.message === "Access Denied") {
+        messageApi.open({
+          type: "error",
+          content: "Access revoked by admin!",
+          duration: 3,
+        });
+      } else if (res.message === "Error" || res.message === "error") {
+        messageApi.open({
+          type: "error",
+          content: "Something went wrong, please try again",
+          duration: 3,
+        });
+      } else {
+        navigate("/home");
+      }
+    });
   };
 
   if (auth.data.isAuthenticated) {
@@ -134,42 +71,84 @@ const Login = () => {
   }
 
   return (
-    <div className="login">
-      <div>
-        <p>Please use this credentials.</p>
-        <p>Email : test@gmail.com</p>
-        <p>Password : test</p>
-      </div>
-      <br />
-      <div className="loginContainer">
-        <div className="loginImage">
-          <img
-            src="https://img.freepik.com/free-vector/tablet-login-concept-illustration_114360-7863.jpg"
-            alt=""
+    <div className="login-container">
+      {contextHolder}
+      
+      <div className="login-card">
+        <div className="login-illustration">
+          <img 
+            src="https://img.freepik.com/free-vector/mobile-login-concept-illustration_114360-135.jpg" 
+            alt="Login Illustration"
           />
-        </div>
-        <div className="loginDetail">
-          <div>
-            <h3>Login</h3>
+          <div className="demo-credentials">
+            <h4>Demo Credentials</h4>
+            <p><strong>Email:</strong> test@gmail.com</p>
+            <p><strong>Password:</strong> test</p>
           </div>
-
-          <div>
-            {/* login form  */}
-            <form onSubmit={handleFormSubmit}>
-              <select name="type" onChange={handleFormChange}>
-                <option value="">Select user type</option>
-                <option value="admin">Admin</option>
-                <option value="tutor">Tutor</option>
-                <option value="student">Student</option>
-              </select>
+        </div>
+        
+        <div className="login-form">
+          <div className="form-header">
+            <h2>Welcome Back</h2>
+            <p>Please login to your account</p>
+          </div>
+          
+          <form onSubmit={handleFormSubmit}>
+            <div className="custom-select">
+              <div 
+                className="select-header"
+                onClick={() => setShowDropdown(!showDropdown)}
+              >
+                {formData.type || "Select user type"}
+                <FiChevronDown className={`dropdown-icon ${showDropdown ? "rotate" : ""}`} />
+              </div>
+              {showDropdown && (
+                <div className="select-options">
+                  <div 
+                    className="option"
+                    onClick={() => {
+                      setFormData({...formData, type: "admin"});
+                      setShowDropdown(false);
+                    }}
+                  >
+                    Admin
+                  </div>
+                  <div 
+                    className="option"
+                    onClick={() => {
+                      setFormData({...formData, type: "tutor"});
+                      setShowDropdown(false);
+                    }}
+                  >
+                    Tutor
+                  </div>
+                  <div 
+                    className="option"
+                    onClick={() => {
+                      setFormData({...formData, type: "student"});
+                      setShowDropdown(false);
+                    }}
+                  >
+                    Student
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            <div className="input-group">
+              <FiUser className="input-icon" />
               <input
                 required
                 name="email"
-                value={formData.id}
+                value={formData.email}
                 onChange={handleFormChange}
                 type="email"
-                placeholder="Enter email"
+                placeholder="Enter email address"
               />
+            </div>
+            
+            <div className="input-group">
+              <FiLock className="input-icon" />
               <input
                 required
                 name="password"
@@ -178,31 +157,20 @@ const Login = () => {
                 type="password"
                 placeholder="Enter password"
               />
-              <button type="submit">CONTINUE</button>
-            </form>
-          </div>
+            </div>
+            
+            <button type="submit" className="login-button">
+              {loading ? "Logging in..." : "Login"}
+            </button>
+          </form>
         </div>
       </div>
-
-      {/* loading indicator */}
-      {contextHolder}
-      {loading ? (
-        <Space
-          style={{
-            width: "100vw",
-            height: "100vh",
-            position: "absolute",
-            backgroundColor: "rgba(0,0,0,0.2)",
-            top: "0",
-            left: "0",
-            display: "flex",
-            justifyContent: "center",
-            alignItem: "center",
-          }}
-        >
-          <Spin size="large"></Spin>
-        </Space>
-      ) : null}
+      
+      {loading && (
+        <div className="loading-overlay">
+          <Spin size="large" />
+        </div>
+      )}
     </div>
   );
 };
