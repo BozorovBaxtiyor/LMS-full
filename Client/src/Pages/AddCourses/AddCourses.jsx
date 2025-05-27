@@ -30,6 +30,7 @@ import Header from "../../Components/Header/Header";
 
 //css imports
 import "./AddCourses.css";
+import { tutorLogin } from "../../Redux/auth/action";
 
 const { TextArea } = Input;
 
@@ -89,6 +90,7 @@ const AddCourses = () => {
         },
         body: JSON.stringify({
           ...values,
+          tutorId: "6819ba46d55c66f78a1868e4",
           startDate: values.startDate.format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
           endDate: values.endDate.format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
           photoUrl: imageUrl || "default-course-image.png",

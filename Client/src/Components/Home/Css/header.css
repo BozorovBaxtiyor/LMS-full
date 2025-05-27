@@ -1,24 +1,83 @@
 /* Base styles */
 /* ...existing code... */
 
+/* Modal styles */
 .filial-modal-overlay {
-  background: rgba(0,0,0,0.4);
-  z-index: 9999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
+
 .filial-modal {
-  background: #fff;
-  border-radius: 12px;
-  padding: 24px;
-  max-width: 400px;
-  width: 90vw;
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 1000px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-  outline: none;
+  position: relative;
 }
+
+.filial-header {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.filial-image {
+  width: 400px;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.filial-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.filial-info {
+  flex: 1;
+}
+
+.filial-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.courses-list {
+  background: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .filial-header {
+    flex-direction: column;
+  }
+
+  .filial-image {
+    width: 100%;
+    height: 200px;
+  }
+
+  .filial-content {
+    grid-template-columns: 1fr;
+  }
+}
+
 .dropdown-menu {
   position: absolute;
   top: 100%;

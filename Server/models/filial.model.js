@@ -29,6 +29,10 @@ const filialSchema = mongoose.Schema(
       required: true,
     },
     photoUrl: String,
+    description: {
+      type: String,
+      required: true,
+    },
   },
   { versionKey: false, timestamps: true }
 );

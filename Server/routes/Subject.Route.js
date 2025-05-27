@@ -21,10 +21,16 @@ router.get("/:subjectId", async (req, res) => {
   try {
     const { subjectId } = req.params;
     const subject = await SubjectModel.findById(subjectId);
+    const tutor = await TutorModel.findById(subject.tutorId).select("name photoUrl");
+    
     if (!subject) {
       return res.status(404).send({ message: "Subject not found" });
     }
-    res.send({ message: "Subject found", subject });
+
+    const subjectObj = subject.toObject();
+    subjectObj.tutor = tutor;
+
+    res.send({ message: "Subject found", subject: subjectObj });
   } catch (error) {
     res.status(400).send({ message: "Error fetching subject", error: error.message });
   }
@@ -43,7 +49,8 @@ router.post("/create", isAdminAuthenticated, upload.single('photo'), async (req,
       uploadedFileName = req.file.filename;
       subjectData.photoUrl = uploadedFileName;
     }
-
+    // console.log(subjectData);
+    
     // Convert string dates to Date objects
     if (subjectData.startDate) {
       subjectData.startDate = new Date(subjectData.startDate);

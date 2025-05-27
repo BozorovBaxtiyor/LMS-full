@@ -4,11 +4,14 @@ import "./Css/header.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import BackendURL from "../../BackendURL";
+import FilialModal from "./FilialModal"; // Assuming you have a FilialModal component
 
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedFilial, setSelectedFilial] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [nearestFilials, setNearestFilials] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const dropdownRef = useRef(null);
@@ -35,16 +38,15 @@ const Header = () => {
   const findNearestFilials = () => {
     setIsLoading(true);
 
-    // Get user's current position
+    // Get user's current position41.352428, 69.288300
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          const { latitude, longitude } = position.coords;
           
           // Make API request to backend
           axios.post(`${BackendURL || ''}/filial/nearest`, {
-            lat: latitude,
-            lng: longitude
+            lat: 41.352428 || position.coords.latitude,
+            lng: 69.288300 || position.coords.longitude
           })
           .then(response => {
             console.log("Nearest filials:", response.data);
@@ -110,6 +112,16 @@ const Header = () => {
     }
   };
 
+  const handleFilialClick = (filial) => {
+    setSelectedFilial(filial);
+    setIsModalOpen(true);
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedFilial(null);
+  };
+
   const toggleDropdown = () => {
     if(!isDropdownOpen){
       findNearestFilials();
@@ -117,6 +129,8 @@ const Header = () => {
       setIsDropdownOpen(!isDropdownOpen);
     }
   };
+
+  
 
   return (
     <header className="header">
@@ -129,7 +143,7 @@ const Header = () => {
                 <FiBook size={20} />
               </div>
               <span className="logo-text">
-                LMS Platform
+                Edu Flow
               </span>
             </a>
           </div>
@@ -139,9 +153,9 @@ const Header = () => {
             <a href="#" className="nav-link">
               Home
             </a>
-            <a href="#" className="nav-link">
+            <Link to="/courses" className="nav-link">
               Courses
-            </a>
+            </Link>
             <a href="#" className="nav-link">
               Instructors
             </a>
@@ -186,6 +200,7 @@ const Header = () => {
                         <div
                           key={filial._id}
                           className="dropdown-item"
+                          onClick={() => handleFilialClick(filial)}
                           style={{ cursor: "pointer" }}
                         >
                           <div><strong>{filial.name}</strong></div>
@@ -293,6 +308,12 @@ const Header = () => {
             </div>
           </div>
         </div>
+      )}
+      {isModalOpen && selectedFilial && (
+        <FilialModal 
+          filial={selectedFilial} 
+          onClose={closeModal}
+        />
       )}
     </header>
   );
