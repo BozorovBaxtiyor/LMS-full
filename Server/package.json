@@ -1,13 +1,16 @@
 {
-  "name": "hms-backend",
+  "name": "edu-flow-backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ."
   },
   "keywords": [],
-  "author": "",
+  "author": "Bozorov Baxtiyor",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.0",

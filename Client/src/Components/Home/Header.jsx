@@ -2,10 +2,15 @@ import { useState, useRef, useEffect } from "react";
 import { FiMenu, FiX, FiUser, FiBook, FiChevronDown, FiSearch } from "react-icons/fi";
 import "./Css/header.css";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import BackendURL from "../../BackendURL";
+
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [nearestFilials, setNearestFilials] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const dropdownRef = useRef(null);
 
   // Close dropdown when clicking outside
@@ -27,8 +32,90 @@ const Header = () => {
     if (isDropdownOpen) setIsDropdownOpen(false);
   };
 
+  const findNearestFilials = () => {
+    setIsLoading(true);
+
+    // Get user's current position
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          
+          // Make API request to backend
+          axios.post(`${BackendURL || ''}/filial/nearest`, {
+            lat: latitude,
+            lng: longitude
+          })
+          .then(response => {
+            console.log("Nearest filials:", response.data);
+            const filialData = Array.isArray(response.data) ? response.data : 
+                     (response.data.filials ? response.data.filials : []);
+                    
+            console.log("Filial data:", filialData);
+                     
+            setNearestFilials(filialData);
+            setIsDropdownOpen(true);
+            setIsLoading(false);
+          })
+          .catch(error => {
+            console.error("Error fetching nearest filials:", error);
+            setIsLoading(false);
+          });
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+          // Use default coordinates if geolocation is denied or unavailable
+          axios.post(`${BackendURL || ''}/filial/nearest`, {
+            lat: 41.377239,
+            lng: 69.285010
+          })
+          .then(response => {
+            console.log("Nearest filials:", response.data);
+            const filialData = Array.isArray(response.data) ? response.data : 
+                     (response.data.filials ? response.data.filials : []);
+                    
+            console.log("Filial data:", filialData);
+            
+            setNearestFilials(filialData);
+            setIsDropdownOpen(true);
+            setIsLoading(false);
+          })
+          .catch(error => {
+            console.error("Error fetching nearest filials:", error);
+            setIsLoading(false);
+          });
+        }
+      );
+    } else {
+      // Use default coordinates if geolocation is not supported
+      axios.post(`${BackendURL || ''}/filial/nearest`, {
+        lat: 41.377239,
+        lng: 69.285010
+      })
+      .then(response => {
+        console.log("Nearest filials:", response.data);
+        const filialData = Array.isArray(response.data) ? response.data : 
+                 (response.data.filials ? response.data.filials : []);
+                
+        console.log("Filial data:", filialData);
+        
+        setNearestFilials(filialData);
+        setIsDropdownOpen(true);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error("Error fetching nearest filials:", error);
+        setIsLoading(false);
+      });
+    }
+  };
+
   const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+    if(!isDropdownOpen){
+      findNearestFilials();
+    }else{
+      setIsDropdownOpen(!isDropdownOpen);
+    }
   };
 
   return (
@@ -81,10 +168,10 @@ const Header = () => {
 
             <div className="dropdown-container" ref={dropdownRef}>
               <button
-                onClick={toggleDropdown}
+                onClick={findNearestFilials}
                 className="dropdown-button"
               >
-                Nearest
+                {isLoading ? "Loading..." : "Nearest"}
                 <FiChevronDown
                   className={`dropdown-chevron ${
                     isDropdownOpen ? "dropdown-chevron-open" : ""
@@ -94,18 +181,27 @@ const Header = () => {
               {isDropdownOpen && (
                 <div className="dropdown-menu">
                   <div className="dropdown-items">
-                    <a href="#" className="dropdown-item">
-                      New York
-                    </a>
-                    <a href="#" className="dropdown-item">
-                      San Francisco
-                    </a>
-                    <a href="#" className="dropdown-item">
-                      Chicago
-                    </a>
+                    {nearestFilials && nearestFilials.length > 0 ? (
+                      nearestFilials.map((filial) => (
+                        <div
+                          key={filial._id}
+                          className="dropdown-item"
+                          style={{ cursor: "pointer" }}
+                        >
+                          <div><strong>{filial.name}</strong></div>
+                          <div style={{ fontSize: '12px', color: '#888' }}>
+                            {filial.address || "No address"} <br />
+                            {typeof filial.distance === 'number' ? filial.distance.toFixed(2) : '0.00'} km
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <span className="dropdown-item">No filials found</span>
+                    )}
                   </div>
                 </div>
               )}
+                
             </div>
 
             <Link to="/login" className="signin-button">
@@ -166,7 +262,7 @@ const Header = () => {
                 onClick={toggleDropdown}
                 className="mobile-dropdown-button"
               >
-                Nearest
+                {isLoading ? "Loading..." : "Nearest"}
                 <FiChevronDown
                   className={`mobile-dropdown-chevron ${
                     isDropdownOpen ? "mobile-dropdown-chevron-open" : ""
@@ -175,21 +271,25 @@ const Header = () => {
               </button>
               {isDropdownOpen && (
                 <div className="mobile-dropdown-items">
-                  <a href="#" className="mobile-dropdown-item">
-                    New York
-                  </a>
-                  <a href="#" className="mobile-dropdown-item">
-                    San Francisco
-                  </a>
-                  <a href="#" className="mobile-dropdown-item">
-                    Chicago
-                  </a>
+                  {nearestFilials && nearestFilials.length > 0 ? (
+                    nearestFilials.map((filial) => (
+                      <a 
+                        key={filial._id} 
+                        href={`/filial/${filial._id}`} 
+                        className="mobile-dropdown-item"
+                      >
+                        {filial.name} ({typeof filial.distance === 'number' ? filial.distance.toFixed(2) : '0.00'} km)
+                      </a>
+                    ))
+                  ) : (
+                    <span className="mobile-dropdown-item">No filials found</span>
+                  )}
                 </div>
               )}
-              <button className="mobile-signin-button">
+              <Link to="/login" className="mobile-signin-button">
                 <FiUser className="mobile-signin-icon" />
                 Sign In
-              </button>
+              </Link>
             </div>
           </div>
         </div>

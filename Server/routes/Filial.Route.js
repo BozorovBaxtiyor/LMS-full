@@ -9,6 +9,7 @@ const { FilialModel } = require("../models/filial.model");
 
 // Middleware import
 const { isAdminAuthenticated, isSuperAdminAuthenticated } = require("../middlewares/authenticate");
+const { route } = require("./Tutor.Route");
 
 // Get all filials
 router.get("/all", async (req, res) => {
@@ -87,9 +88,25 @@ router.delete("/:filialId", isSuperAdminAuthenticated, async (req, res) => {
   }
 });
 
+router.get("/:filialId", async (req, res) => {
+  try {
+    const { filialId } = req.params;
+    const filial = await FilialModel.findById(filialId);
+    if (!filial) {
+      return res.status(404).send({ message: "Filial not found" });
+    }
+    res.send({ message: "Filial data", filial });
+  } catch (error) {
+    res.status(400).send({ message: "Error fetching filial data", error: error.message });
+  }
+});
+
 // Find nearest filials
 router.post("/nearest", async (req, res) => {
   try {
+
+    console.log(req.body , 'req.body');
+
     const { lat, lng } = req.body;
     
     // Validate coordinates

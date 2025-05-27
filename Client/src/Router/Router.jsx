@@ -12,6 +12,8 @@ import SingleDoubt from "../Pages/SingleDoubt/SingleDoubt";
 import LeaderBoard from "../Pages/LeaderBoard/LeaderBoard";
 import HomePage from "../Pages/HomePage";
 import AddCourses from "../Pages/AddCourses/AddCourses";
+import FilialDetail from "../Components/Home/FilialDetail";
+import  FilialsGrid  from "../Components/Home/FilialGrid";
 
 const Router = () => {
   return (
@@ -30,6 +32,8 @@ const Router = () => {
         <Route path="/doubts" element={<Doubts />} />
         <Route path="/doubt/:id" element={<SingleDoubt />} />
         <Route path="/add/courses" element={<AddCourses />} />
+        <Route path="/filials" element={<FilialsGrid />} />
+        <Route path="/filial/:id" element={<FilialDetail />} />
         <Route path="*" element={<Home />} />
       </Routes>
     </div>
