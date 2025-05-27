@@ -1,8 +1,8 @@
 .courses-page {
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 4rem auto 2rem; /* top marginni oshiramiz header uchun */
+}
 
   .courses-page h1{
     text-align: center;

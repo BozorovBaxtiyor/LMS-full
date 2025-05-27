@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './Css/Courses.css'; // Ensure you have the correct path to your CSS file
-  import BackendURL from '../../BackendURL';
+import BackendURL from '../../BackendURL';
+import { Header } from '../Home';
 
 const Courses = () => {
   const [courses, setCourses] = useState([]);
@@ -28,6 +29,8 @@ const Courses = () => {
   }
 
   return (
+    <>
+      <Header />
     <div className="courses-page">
       <h1>Available Courses</h1>
       <div className="courses-grid">
@@ -70,6 +73,7 @@ const Courses = () => {
         ))}
       </div>
     </div>
+    </>
   );
 };
 

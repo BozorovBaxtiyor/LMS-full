@@ -4,14 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   Button,
   Card,
-  Col,
+  // Col,
   DatePicker,
   Form,
   Input,
   InputNumber,
   message,
   Modal,
-  Row,
+  // Row,
   Space,
   Spin,
   Upload,
@@ -30,12 +30,13 @@ import Header from "../../Components/Header/Header";
 
 //css imports
 import "./AddCourses.css";
-import { tutorLogin } from "../../Redux/auth/action";
+// import { tutorLogin } from "../../Redux/auth/action";
+import BackendURL from "../../BackendURL";
 
 const { TextArea } = Input;
 
 const AddCourses = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
@@ -66,6 +67,7 @@ const AddCourses = () => {
     try {
       const response = await fetch("http://170.64.141.16:8080/subject/all");
       const data = await response.json();
+      console.log(data);
       if (response.ok) {
         setCourses(data.subjects);
       } else {
@@ -181,10 +183,14 @@ const AddCourses = () => {
                 className="course-card"
                 key={course._id}
                 cover={
-                  <div
-                    className="course-image"
-                    style={{ backgroundImage: `url(${course.photoUrl})` }}
-                  />
+                  <img
+                src={BackendURL + '/images/' + course.photoUrl}
+                alt={course.name}
+                onError={(e) => {
+                    e.target.onerror = null; // infinite loopdan saqlanish
+                    e.target.src = '../../../../icons/image.png'; // default image yo‘li
+                }}
+            />
                 }
                 actions={[
                   <div className="action-btn edit-btn" key="edit">

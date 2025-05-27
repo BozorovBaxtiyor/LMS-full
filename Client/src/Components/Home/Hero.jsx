@@ -8,6 +8,7 @@ import {
 import "./Css/hero.css";
 import Lottie from "lottie-react";
 import EduLottieImg from "../../Assets/edu-lottie.json";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
@@ -27,9 +28,9 @@ const HeroSection = () => {
             </p>
 
             <div className="hero-buttons">
-              <button className="primary-button">
+              <Link to="/courses" className="primary-button">
                 View Courses <FiArrowRight className="button-icon-right" />
-              </button>
+              </Link>     
 
               <button className="secondary-button">
                 <FiPlay className="button-icon-left" /> Watch Video
