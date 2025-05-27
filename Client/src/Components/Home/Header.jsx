@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { FiMenu, FiX, FiUser, FiBook, FiChevronDown, FiSearch } from "react-icons/fi";
 import "./Css/header.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import BackendURL from "../../BackendURL";
 import FilialModal from "./FilialModal"; // Assuming you have a FilialModal component
@@ -15,6 +15,7 @@ const Header = () => {
   const [nearestFilials, setNearestFilials] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const dropdownRef = useRef(null);
+  const location =  useLocation();
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -150,21 +151,36 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="desktop-nav">
-            <a href="#" className="nav-link">
+            <Link 
+              to="/" 
+              className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
+            >
               Home
-            </a>
-            <Link to="/courses" className="nav-link">
+            </Link>
+            <Link 
+              to="/courses" 
+              className={`nav-link ${location.pathname === '/courses' ? 'active' : ''}`}
+            >
               Courses
             </Link>
-            <a href="#" className="nav-link">
+            <Link 
+              to="/instructors" 
+              className={`nav-link ${location.pathname === '/instructors' ? 'active' : ''}`}
+            >
               Instructors
-            </a>
-            <a href="#" className="nav-link">
+            </Link>
+            <Link 
+              to="/about" 
+              className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`}
+            >
               About
-            </a>
-            <a href="#" className="nav-link">
+            </Link>
+            <Link 
+              to="/contact" 
+              className={`nav-link ${location.pathname === '/contact' ? 'active' : ''}`}
+            >
               Contact
-            </a>
+            </Link>
           </nav>
 
           {/* Search and User section */}
