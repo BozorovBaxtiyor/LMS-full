@@ -65,7 +65,7 @@ const AddCourses = () => {
   const fetchCourses = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://170.64.141.16:8080/subject/all");
+      const response = await fetch(`${BackendURL}/subject/all`);
       const data = await response.json();
       console.log(data);
       if (response.ok) {
@@ -84,7 +84,7 @@ const AddCourses = () => {
   const handleCreateCourse = async (values) => {
     setCreateLoading(true);
     try {
-      const response = await fetch("http://170.64.141.16:8080/subject/create", {
+      const response = await fetch(`${BackendURL}/subject/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -132,7 +132,7 @@ const AddCourses = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `http://170.64.141.16:8080/subject/delete/${courseId}`,
+        `${BackendURL}/subject/delete/${courseId}`,
         {
           method: "DELETE",
         }

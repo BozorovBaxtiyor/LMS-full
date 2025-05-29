@@ -80,11 +80,11 @@ const Login = () => {
             src="https://img.freepik.com/free-vector/mobile-login-concept-illustration_114360-135.jpg" 
             alt="Login Illustration"
           />
-          <div className="demo-credentials">
+          {/* <div className="demo-credentials">
             <h4>Demo Credentials</h4>
             <p><strong>Email:</strong> test@gmail.com</p>
             <p><strong>Password:</strong> test</p>
-          </div>
+          </div> */}
         </div>
         
         <div className="login-form">

@@ -43,7 +43,7 @@ const Navbar = ({ children }) => {
   //Sidebar menu
   const adminData = [
     { icon: <HiOutlineHome />, title: "Dashboard", address: "/home" },
-    { icon: <RiAdminLine />, title: "Admins", address: "/admin" },
+    // { icon: <RiAdminLine />, title: "Admins", address: "/admin" },
     { icon: <BiUserVoice />, title: "Tutors", address: "/tutor" },
     { icon: <PiStudentDuotone />, title: "Students", address: "/student" },
     { icon: <TbBrandSpeedtest />, title: "Quizzes", address: "/quizzes" },

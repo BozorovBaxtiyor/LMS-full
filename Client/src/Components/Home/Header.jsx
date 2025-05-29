@@ -39,15 +39,17 @@ const Header = () => {
   const findNearestFilials = () => {
     setIsLoading(true);
 
-    // Get user's current position41.352428, 69.288300
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          const {latitude, longitude} = position.coords;
+          // console.log("User's location:", latitude, longitude);
+          // console.log('Dinamic Location:', 41.377239, 69.285010);
           
           // Make API request to backend
           axios.post(`${BackendURL || ''}/filial/nearest`, {
-            lat: 41.352428 || position.coords.latitude,
-            lng: 69.288300 || position.coords.longitude
+            lat:  latitude || 41.377239,
+            lng:  longitude || 69.285010
           })
           .then(response => {
             console.log("Nearest filials:", response.data);
@@ -162,12 +164,6 @@ const Header = () => {
               className={`nav-link ${location.pathname === '/courses' ? 'active' : ''}`}
             >
               Courses
-            </Link>
-            <Link 
-              to="/instructors" 
-              className={`nav-link ${location.pathname === '/instructors' ? 'active' : ''}`}
-            >
-              Instructors
             </Link>
             <Link 
               to="/about" 

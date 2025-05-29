@@ -14,7 +14,7 @@ const {
 const { envFile } = require("../configs/env.config");
 
 //get all admin data route
-router.get("/all", async (req, res) => {
+router.get("/all", isSuperAdminAuthenticated, async (req, res) => {
   try {
     const admins = await AdminModel.find();
     res.send({ message: "All admins data", admins });
